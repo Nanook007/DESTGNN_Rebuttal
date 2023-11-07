@@ -1,0 +1,95 @@
+---
+# start up
+start_up:
+  # =================== running mode (select one of the three) ================== #
+  mode: scratch     # three mode: test, resume, scratch
+  resume_epoch: 0   # default to zero, if use the 'resume' mode, users need to set the epoch to resume.
+
+  model_name:   D2STGNN                                   # model name
+  load_pkl:     False                                     # load serialized dataloader
+
+# Data Processing
+data_args:
+  dataset_name:   PEMS08
+  num_nodes:      170
+  data_dir:       datasets/PEMS08                         # data path
+  adj_data_path:  datasets/sensor_graph/adj_mx_08.pkl     # adj data path
+  adj_type:       doubletransition                        # adj type to preprocessing
+
+# Model Args
+model_args:
+  batch_size:   64
+  num_feat:     1
+  num_hidden:   32
+  node_hidden:  10
+  time_emb_dim: 10
+  seq_length:   12
+
+  node_dim: 40
+  topk: 20
+
+  conv_channels: 32 
+  residual_channels: 32
+  skip_channels: 32
+  end_channels: 128
+
+# TCN
+  num_nodes: 170
+  input_len: 12
+  input_dim: 3
+  in_dim: 3
+  output_len: 12
+  num_layer: 3
+
+  embed_dim: 32
+  node_dim_tcn: 32
+  temp_dim_tid: 32
+  temp_dim_diw: 32
+
+  time_of_day_size: 288
+  day_of_week_size: 7
+  if_T_i_D: True
+  if_D_i_W: True
+  if_node: True
+
+  gcn_depth: 2
+  gcn_layers: 25
+  dropout: 0.2
+
+# Optimization Args
+optim_args:
+  # adam optimizer
+  lrate:          0.001                                   # learning rate
+  print_model:    False
+  wdecay:         1.0e-5                                  # weight decay of adam
+  eps:            1.0e-8                                  # eps of adam
+  
+  # learning rate scheduler
+  lr_decay_ways:  step
+  # lr_decay_ways:  cos
+  # lr_decay_ways:  ExLR
+  exp_gamma: 0.95
+
+  lr_schedule:    True
+  T_max: 10
+  # lr_sche_steps:  [1, 30, 38, 46, 54, 62, 70, 80, 90]
+  # lr_sche_steps:  [50, 90, 110, 130, 150, 170, 190]
+  lr_sche_steps:  [25, 50, 70, 90, 110, 130, 150, 170, 190]
+  lr_decay_ratio: 0.5
+
+# lrate: 0.001 wdecay: 1e-05 dropout: 0.2 lr_sche_steps: [25, 50, 70, 90, 110, 130, 150, 170, 190] gcn_layers25 best
+
+  # curriculum learning 
+  # if_cl:          True
+  if_cl:          False
+  cl_epochs:      6
+  output_seq_len: 12
+  
+  # warm up
+  warm_epochs:    0
+
+  epochs:         100
+  # epochs:         1
+  tolerance:      30                     
+  patience:       100                                     
+  seq_length:     12 
